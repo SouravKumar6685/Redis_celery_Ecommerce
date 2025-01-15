@@ -1,0 +1,207 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+  <style>
+    body {
+      background-color: #AEBAF8;
+      font-family: 'RobotoDraft', 'Roboto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .center {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      justify-content: flex-start; /* Aligning content to the left */
+      align-items: flex-start; /* Aligning content to the top */
+    }
+
+    #sidebar {
+      width: 25%;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 15px 15px 27px #e1e1e3, -15px -15px 27px #ffffff;
+      border-radius: 16px;
+    }
+
+    #main {
+      width: 75%;
+      padding: 20px;
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .property-card {
+      width: 14em;
+      height: 18em;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: none; /* Removed the glow effect */
+    }
+
+    .property-image {
+      height: 6em;
+      width: 100%;
+      background-image: url('https://cdn.photographylife.com/wp-content/uploads/2017/01/What-is-landscape-photography.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .property-description {
+      background-color: #FAFAFC;
+      height: 12em;
+      padding: 0.5em 1em;
+      text-align: center;
+    }
+
+    .property-description h5 {
+      margin: 0;
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+
+    .property-description p {
+      font-size: 12px;
+    }
+
+    .property-social-icons {
+      width: 1em;
+      height: 1em;
+      background-color: black;
+      position: absolute;
+      bottom: 1em;
+      left: 1em;
+    }
+
+    .property-card:hover .property-description {
+      height: 0em;
+      padding: 0px 1em;
+    }
+
+    .property-card:hover .property-image {
+      height: 18em;
+    }
+
+    .property-card:hover .property-social-icons {
+      background-color: white;
+    }
+
+    .property-card:hover .property-social-icons:hover {
+      background-color: blue;
+      cursor: pointer;
+    }
+
+    .selected {
+      color: #4C6BFF; /* Highlight selected category */
+    }
+
+    /* Styling for categories sidebar */
+    #sidebar ul {
+      padding-left: 0;
+      list-style: none;
+    }
+
+    #sidebar li {
+      margin-bottom: 1em;
+    }
+
+    #sidebar li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1.1em;
+      padding: 8px 12px;
+      display: block;
+      border-radius: 4px;
+    }
+
+    #sidebar li a:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Styling for the product list items */
+    .item {
+      text-align: center;
+      margin-bottom: 1em;
+      padding: 1em;
+      background-color: white;
+      box-shadow: none; /* Removed the glow effect */
+      border-radius: 8px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .item:hover {
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+
+    .item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .item a {
+      text-decoration: none;
+      color: #333;
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    .item a:hover {
+      color: #4C6BFF;
+    }
+
+    .item br {
+      margin-bottom: 10px;
+    }
+  </style>
+
+  <div class="center">
+    <!-- Sidebar (Categories) -->
+    <div id="sidebar" class="w-1/4 p-4 bg-white shadow-lg rounded-lg mr-4 mb-4 md:mb-0">
+      <h3 class="text-xl font-semibold text-gray-800 mb-4">Categories</h3>
+      <ul class="space-y-2">
+        <li {% if not category %}class="selected font-bold text-blue-500"{% endif %}>
+          <a href="{% url 'shop:product_list' %}" class="text-gray-700 hover:text-blue-500">All</a>
+        </li>
+        {% for c in categories %}
+          <li {% if category.slug == c.slug %}class="selected font-bold text-blue-500"{% endif %}>
+            <a href="{{ c.get_absolute_url }}" class="text-gray-700 hover:text-blue-500">{{ c.name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Main Content (Products) -->
+    <div id="main" class="product-list w-3/4 p-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for product in products %}
+          <div class="item">
+            <a href="{{ product.get_absolute_url }}">
+              <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+            </a>
+            <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+            <br>
+            {{ product.price }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

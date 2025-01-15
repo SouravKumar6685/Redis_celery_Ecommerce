@@ -1,0 +1,176 @@
+
+{% load static %}
+{% block title %}
+{% endblock %}
+
+{% block content %}
+  <style>
+    body {
+      background-color: #F7F7F7;
+      font-family: 'RobotoDraft', 'Roboto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #333;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .cart {
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background-color: #FFF;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .cart th,
+    .cart td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #EEE;
+    }
+
+    .cart thead {
+      background-color: #4C6BFF;
+      color: #FFF;
+    }
+
+    .cart th {
+      font-size: 1.2em;
+      font-weight: 600;
+    }
+
+    .cart td img {
+      width: 80px;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .cart .num {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .cart .total {
+      font-weight: 700;
+      font-size: 1.2em;
+      background-color: #F2F2F2;
+    }
+
+    .text-right {
+      text-align: right;
+      margin: 20px auto;
+      max-width: 1200px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 1em;
+      font-weight: 600;
+      color: #FFF;
+      background-color: #4C6BFF;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #2A56B8;
+    }
+
+    .button.light {
+      background-color: #CCC;
+      color: #333;
+    }
+
+    .button.light:hover {
+      background-color: #AAA;
+    }
+
+    form {
+      margin: 0;
+    }
+
+    input[type="submit"] {
+      background: #E74C3C;
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background: #C0392B;
+    }
+  </style>
+
+  <h1>Your Shopping Cart</h1>
+  <table class="cart">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Remove</th>
+        <th>Unit Price</th>
+        <th>Total Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+        {% with product=item.product %}
+          <tr>
+            <td>
+              <a href="{{ product.get_absolute_url }}">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+              </a>
+            </td>
+            <td>{{ product.name }}</td>
+            <td>
+              <form action="{% url 'cart:cart_add' product.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="override" value="False">
+                <button type="submit" style="background: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">+</button>
+              </form>
+              {{ item.quantity }}
+              <form action="{% url 'cart:cart_add' product.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="-1">
+                <input type="hidden" name="override" value="False">
+                <button type="submit" style="background: #E74C3C; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer;">−</button>
+              </form>
+            </td>
+            <td>
+              <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Remove">
+              </form>
+            </td>
+            <td class="num">{{ item.price }}</td>
+            <td class="num">{{ item.total_price }}</td>
+          </tr>
+        {% endwith %}
+      {% endfor %}
+      <tr class="total">
+        <td colspan="4">Total</td>
+        <td colspan="2" class="num">{{ cart.get_total_price }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="text-right">
+    <a href="{% url 'shop:product_list' %}" class="button light">Continue Shopping</a>
+    <a href="{% url 'orders:order_create' %}" class="button">Checkout</a>
+  </p>
+{% endblock %}

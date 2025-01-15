@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{% block title %}My Shop{% endblock %}</title>
+    <!-- Add Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <!-- Add Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </head>
+  <body class="bg-[#AEBAF8]"> <!-- Using the specified color code as the background -->
+    <div id="header" class="p-6 bg-white shadow-xl mb-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <a href="/" class="text-3xl font-extrabold text-gray-800 hover:text-purple-600">My Shop</a>
+
+        <!-- Cart Display with Cart Icon and Cart Info -->
+        <div class="cart text-gray-600 flex items-center space-x-2">
+          {% with total_items=cart|length %}
+            {% if total_items > 0 %}
+              <!-- Display Cart Info with Font Awesome Cart Icon -->
+              <a href="{% url 'cart:cart_detail' %}" class="text-lg font-semibold flex items-center space-x-1">
+                <span>
+                  <img src="https://static.vecteezy.com/system/resources/previews/012/791/182/original/solid-shopping-cart-icon-free-vector.jpg" class="w-8 h-8" alt="Cart Icon">
+                </span>
+                <span>{{ total_items }} item{{ total_items|pluralize }}, ${{ cart.get_total_price }}</span>
+              </a>
+            {% else %}
+              <!-- Cart is Empty -->
+              <a href="{% url 'cart:cart_detail' %}" class="text-lg font-semibold flex items-center space-x-1">
+                <span>
+                  <img src="https://static.vecteezy.com/system/resources/previews/012/791/182/original/solid-shopping-cart-icon-free-vector.jpg" class="w-8 h-8" alt="Cart Icon">
+                </span>
+                <span>Your cart is empty.</span>
+              </a>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+
+    <div id="content" class="max-w-7xl mx-auto px-4">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>

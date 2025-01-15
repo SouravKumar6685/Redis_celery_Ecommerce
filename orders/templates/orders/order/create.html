@@ -1,0 +1,49 @@
+{% extends "shop/base.html" %}
+{% block title %}
+  Checkout
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-extrabold text-gray-800 mb-4">Checkout</h1>
+    
+    <!-- Order Information -->
+    <div class="order-info mb-6 bg-white p-6 rounded-lg">
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">Your order</h3>
+      <ul class="space-y-4">
+        {% for item in cart %}
+          <li class="flex justify-between items-center">
+            <span class="text-gray-600">{{ item.quantity }}x {{ item.product.name }}</span>
+            <span class="text-gray-800 font-semibold">${{ item.total_price }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="mt-4 border-t pt-4">
+        <p class="text-xl font-semibold text-gray-800">Total: ${{ cart.get_total_price }}</p>
+      </div>
+    </div>
+    
+    <!-- Order Form -->
+    <form method="post" class="order-form bg-white p-6 rounded-lg">
+      <h3 class="text-2xl font-semibold text-gray-800 mb-4">Billing Information</h3>
+      <div class="mb-6">
+        {% for field in form %}
+          <div class="mb-4">
+            <label for="{{ field.id_for_label }}" class="block text-gray-700 font-medium mb-2">{{ field.label }}</label>
+            <input type="{{ field.type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="w-full p-3 border-2 border-gray-300 rounded-md focus:outline-none focus:border-blue-500 placeholder-gray-500" placeholder="{{ field.label }}">
+            {% if field.errors %}
+              <div class="text-red-500 text-sm mt-1">
+                {% for error in field.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      
+      <button type="submit" class="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300">Place Order</button>
+      {% csrf_token %}
+    </form>
+  </div>
+{% endblock %}

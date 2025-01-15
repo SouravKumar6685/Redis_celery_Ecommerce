@@ -1,0 +1,114 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ product.name }}
+{% endblock %}
+
+{% block content %}
+  <style>
+    body {
+      background-color: #AEBAF8;
+      font-family: 'RobotoDraft', 'Roboto', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .product-detail {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-detail img {
+      width: auto;
+      height: 400px;
+      margin: 0 auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .product-detail h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    .product-detail h2 a {
+      font-size: 1.5em;
+      color: #4C6BFF;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .product-detail h2 a:hover {
+      color: #2A56B8;
+    }
+
+    .price {
+      font-size: 1.8em;
+      color: #333;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .product-detail p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-top: 15px;
+      color: #555;
+    }
+
+    .add-to-cart {
+      margin-top: 20px;
+    }
+
+    .add-to-cart form {
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .add-to-cart input[type="submit"] {
+      padding: 10px 20px;
+      font-size: 1em;
+      font-weight: 600;
+      color: white;
+      background-color: #4C6BFF;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart input[type="submit"]:hover {
+      background-color: #2A56B8;
+    }
+  </style>
+
+  <div class="product-detail">
+    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+    <h1>{{ product.name }}</h1>
+    <h2>
+      <a href="{{ product.category.get_absolute_url }}">
+        {{ product.category }}
+      </a>
+    </h2>
+    <p class="price">{{ product.price }}</p>
+    <div class="add-to-cart">
+      <form action="{% url 'cart:cart_add' product.id %}" method="post">
+        {{ cart_product_form }}
+        {% csrf_token %}
+        <input type="submit" value="Add to Cart">
+      </form>
+    </div>
+    <p>{{ product.description|linebreaks }}</p>
+  </div>
+{% endblock %}
