@@ -3,6 +3,7 @@ from myapp.models import Product
 
 # Create your models here.
 class Order(models.Model):
+    braintree_id = models.CharField(max_length=150,blank=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -18,7 +19,7 @@ class Order(models.Model):
     def __str__(self):
         return f'Order {self.id}'
     def get_total_cost(self):
-        return sum(item.get_cost() for item in self.items.all())
+        return sum(item.get_cost() for item in self.order_items.all())
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='order_items', on_delete=models.CASCADE)  # Removed repeated related_name

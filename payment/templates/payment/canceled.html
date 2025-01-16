@@ -1,0 +1,59 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Payment Canceled{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background-color: #FFF5F5;
+    font-family: 'RobotoDraft', 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .cancel-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .cancel-container h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #FF4C4C;
+    margin-bottom: 20px;
+  }
+
+  .cancel-container p {
+    font-size: 1.2em;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .cancel-container a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 600;
+    color: white;
+    background-color: #4C6BFF;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+
+  .cancel-container a:hover {
+    background-color: #2A56B8;
+  }
+</style>
+
+<div class="cancel-container">
+  <h1>Your Payment Was Not Processed</h1>
+  <p>There was a problem processing your payment. Please try again or contact support if the issue persists.</p>
+  <a href="/">Return to Home</a>
+</div>
+{% endblock %}
